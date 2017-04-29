@@ -5,6 +5,10 @@
 
   "description": "Forces certain websites to provide high-level SSL Certificates",
 
+  "icons": {
+    "48": "checker_icon.png"
+  },
+
   "content-scripts": [
     "matches": ["*://*.*.*/*"],
     "js": ["check_ssl.js"]
