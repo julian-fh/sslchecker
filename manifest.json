@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "SSL Checker",
+  "version": "beta0.1",
+
+  "description": "Forces certain websites to provide high-level SSL Certificates",
+
+  "content-scripts": [
+    "matches": ["*://*.*.*/*"],
+    "js": ["check_ssl.js"]
+  ]
+}
