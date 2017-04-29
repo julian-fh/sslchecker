@@ -1,12 +1,18 @@
 {
+
+  "description": "Demonstrating webRequests",
   "manifest_version": 2,
-  "name": "SSL Checker",
-  "version": "beta0.1",
+  "name": "webRequest-demo",
+  "version": "1.0",
 
-  "description": "Forces certain websites to provide high-level SSL Certificates",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "https://www.google.de"
+  ],
 
-  "content-scripts": [
-    "matches": ["*://*.*.*/*"],
-    "js": ["check_ssl.js"]
-  ]
+  "background": {
+    "scripts": ["background.js"]
+  }
+
 }
