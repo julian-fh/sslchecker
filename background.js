@@ -40,10 +40,13 @@ function parseResult(jsonResponse, referenceURL) {
 
 function main(target) {
   var hostname = getHostname(target.url);
+  var sourceHostname = getHostname(target.originUrl);
 
-  if (hostname == "julian-fh.github.io") {
+  if (hostname == "julian-fh.github.io" || sourceHostname == "julian-fh.github.io" || sourceHostname == hostname) {
     return target;
   }
+
+  console.log(target);
 
   var res = hostname.split(".");
   var host = res[res.length - 2];
@@ -53,7 +56,7 @@ function main(target) {
   //xhr.open("GET", "https://www.google.de/?q=" + host, false);
 
   // <insert request here>
-
+  
 
   xhr.send();
 
