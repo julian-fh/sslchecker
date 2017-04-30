@@ -1,16 +1,19 @@
 {
+
+  "description": "Demonstrating webRequests",
   "manifest_version": 2,
-  "name": "SSL Checker",
-  "version": "beta0.1",
+  "name": "webRequest-demo",
+  "version": "1.0",
 
-  "description": "Forces certain websites to provide high-level SSL Certificates",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "https://www.facebook.com",
+    "https://www.google.de/*",
+    "https://www.googleapis.com/*"
+  ],
 
-  "icons": {
-    "48": "checker_icon.png"
-  },
-
-  "content-scripts": [
-    "matches": ["*://*.*.*/*"],
-    "js": ["check_ssl.js"]
-  ]
+  "background": {
+    "scripts": ["background.js"]
+  }
 }
