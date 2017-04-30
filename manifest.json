@@ -19,7 +19,7 @@
 
   "browser_action": {
     "browser_style": true,
-    "default_popup": "popup/default.html",
+    "default_popup": "popup/default_pop.html",
     "default_icon": {
       "32": "icons/shield_32.png"
     }

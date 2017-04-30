@@ -1,4 +1,6 @@
 var pattern = "https://*.facebook.de/*";
+var isActive = true;
+
 
 function redirect(requestDetails) {
   console.log("Redirecting: " + requestDetails.url);
@@ -6,7 +8,6 @@ function redirect(requestDetails) {
     redirectUrl: "https://facebook.com"
   };
 }
-
 
 function getHostname(target) {
   var l = document.createElement("a");
@@ -35,33 +36,42 @@ function parseResult(jsonResponse, referenceURL) {
 
 
 function main(target) {
-  var hostname = getHostname(target.url);
-  var res = hostname.split(".");
-  var host = res[res.length - 2];
-  console.log(host);
+    if(isActive) {
+        var hostname = getHostname(target.url);
+        var res = hostname.split(".");
+        var host = res[res.length - 2];
+        console.log(host);
 
-  var xhr = new XMLHttpRequest();
-  //xhr.open("GET", "https://www.google.de/?q=" + host, false);
+        var xhr = new XMLHttpRequest();
+        //xhr.open("GET", "https://www.google.de/?q=" + host, false);
 
-  // <insert request here>
+        // <insert request here>
 
-  console.log("request init");
+        console.log("request init");
 
-  xhr.send();
+        xhr.send();
 
-  console.log("request done");
+        console.log("request done");
 
-  var result = xhr.responseText;
-  if (parseResult(result, target.url)) {
-    console.log("success");
-    browser.browserAction.setPopup({popup: "/popup/success.html"});
-    browser.browserAction.setIcon({path: "icons/lock_32.png" });
-  } else {
-    console.log("error");
-    browser.browserAction.setPopup({popup: "/popup/fail.html"});
-    browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
-  }
+        var result = xhr.responseText;
+        if (parseResult(result, target.url)) {
+            console.log("success");
+            browser.browserAction.setIcon({path: "icons/lock_32.png"});
+        } else {
+            console.log("error");
+            browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
+        }
+    }
 }
+
+function handleIconClick() {
+
+  isActive=!isActive;
+    if(isActive){browser.BrowserAction.setIcon({path: "icons/lock_32.png" });}
+    else{browser.BrowserAction.setIcon({path: "icons/lock_32.png" })};
+}
+
+browser.browserAction.onClicked.addListener(handleIconCLick);
 
 
 browser.webRequest.onBeforeRequest.addListener(
