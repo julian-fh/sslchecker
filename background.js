@@ -54,6 +54,7 @@ function main(target) {
 
   // <insert request here>
 
+
   xhr.send();
 
   console.log("request done");
@@ -61,17 +62,17 @@ function main(target) {
   var result = xhr.responseText;
   if (parseResult(result, target.url)) {
     console.log("success");
-    browser.browserAction.setPopup({popup: "/popup/success.html"});
+    browser.browserAction.setPopup({popup: "/popup/locked_pop.html"});
     browser.browserAction.setIcon({path: "icons/lock_32.png" });
 
     return target;
   } else {
     console.log("failed");
-    browser.browserAction.setPopup({popup: "/popup/fail.html"});
+    browser.browserAction.setPopup({popup: "/popup/unlocked_pop.html"});
     browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
 
     return {
-      redirectUrl: "https://julian-fh.github.io"
+      redirectUrl: "https://julian-fh.github.io/?callback=" + target.url
     };
   }
 }
