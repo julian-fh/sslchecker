@@ -1,3 +1,42 @@
+// Init
+
+var tabStates = [];
+var currentTab = 0;
+
+browser.tabs.onActivated.addListener(onTabSwitched)
+
+function setButtonState(state) {
+  if (state) {
+    browser.browserAction.setIcon({path: "icons/lock_32.png" });
+  } else {
+    browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
+  }
+
+  if (currentTab >= tabStates.length) {
+    tabStates.push(state);
+  } else {
+    tabStates[currentTa] = state;
+  }
+
+}
+
+
+function onTabSwitched(tab) {
+  var tabID = tab.tabId;
+
+  if (tabID != null) {
+    try {
+      currentTab = tabID;
+      var tabState = tabStates[tabID];
+
+      setButtonState(tabState);
+    } catch (e) {
+
+    }
+  }
+}
+
+
 function getHostname(target) {
   var l = document.createElement("a");
   l.href = target;
@@ -63,16 +102,18 @@ function main(target) {
   console.log("request done");
 
   var result = xhr.responseText;
+
   if (parseResult(result, target.url)) {
+
     console.log("success");
     browser.browserAction.setPopup({popup: "/popup/locked_pop.html"});
-    browser.browserAction.setIcon({path: "icons/lock_32.png" });
+    setButtonState(true);
 
     return target;
   } else {
     console.log("failed");
     browser.browserAction.setPopup({popup: "/popup/unlocked_pop.html"});
-    browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
+    setButtonState(false);
 
     return {
       redirectUrl: "https://julian-fh.github.io/?callback=" + target.url
