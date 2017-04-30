@@ -25,12 +25,12 @@ function parseResult(jsonResponse, referenceURL) {
   for (; i < 3; i++) {
     if (getHostname(items[i].link) == getHostname(referenceURL)) {
       found = true;
-      console.log("found " + i);
-      console.log(getHostname(items[i].link));
-      console.log(getHostname(referenceURL));
+      console.log("found " + getHostname(referenceURL));
       break;
     }
   }
+
+  return found;
 }
 
 
@@ -54,5 +54,5 @@ function main(target) {
 
 browser.webRequest.onBeforeRequest.addListener(
   main,
-  {urls:[pattern]}
+  {urls:[pattern], types:["main_frame"]}
 );
