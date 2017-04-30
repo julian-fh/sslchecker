@@ -30,13 +30,12 @@
             .substr(1)
             .split("&")
             .some(function(item) {
-                return param = item.split("=")[1];
+                return param = item.split("llback=")[1];
             });
         return param;
     }
 
     var parseText = getQueryParam("callback");
-    alert(parseText);
     var button = $('#BtnCtn').attr('href',  parseText);
 
 </script>

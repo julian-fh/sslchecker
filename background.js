@@ -2,6 +2,7 @@
 
 var tabStates = [];
 var currentTab = 0;
+var isActive = true;
 
 browser.tabs.onActivated.addListener(onTabSwitched)
 
@@ -17,7 +18,6 @@ function setButtonState(state) {
   } else {
     tabStates[currentTa] = state;
   }
-
 }
 
 
@@ -35,7 +35,6 @@ function onTabSwitched(tab) {
     }
   }
 }
-
 
 function getHostname(target) {
   var l = document.createElement("a");
@@ -78,6 +77,10 @@ function parseResult(jsonResponse, referenceURL) {
 
 
 function main(target) {
+  if (!isActive) {
+    return target;
+  }
+
   var hostname = getHostname(target.url);
   var sourceHostname = getHostname(target.originUrl);
 
@@ -91,15 +94,15 @@ function main(target) {
   var host = res[res.length - 2];
   console.log("Now processing:" + host);
 
-  var xhr = new XMLHttpRequest();
-  //xhr.open("GET", "https://www.google.de/?q=" + host, false);
+        var xhr = new XMLHttpRequest();
+        //xhr.open("GET", "https://www.google.de/?q=" + host, false);
 
   // <insert request here>
-  
 
-  xhr.send();
 
-  console.log("request done");
+        xhr.send();
+
+        console.log("request done");
 
   var result = xhr.responseText;
 
@@ -120,6 +123,15 @@ function main(target) {
     };
   }
 }
+
+function handleIconClick() {
+
+  isActive=!isActive;
+    if(isActive){browser.BrowserAction.setIcon({path: "icons/lock_32.png" });}
+    else{browser.BrowserAction.setIcon({path: "icons/lock_32.png" })};
+}
+
+browser.browserAction.onClicked.addListener(handleIconCLick);
 
 
 browser.webRequest.onBeforeRequest.addListener(
