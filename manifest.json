@@ -16,5 +16,4 @@
   "background": {
     "scripts": ["background.js"]
   }
-
 }
