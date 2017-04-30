@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
 <div class="container">
     <div class="jumbotron" id="jumbo">
         <center>
@@ -18,24 +30,16 @@
             .substr(1)
             .split("&")
             .some(function(item) {
-                return item.split("=")[0] == param && (param = item.split("=")[1]);
+                return param = item.split("=")[1];
             });
         return param;
     }
 
-    var button = $('BtnCtn').attr("href", getQueryParam("callback"));
-    $("#jumbo").append(button);
+    var parseText = getQueryParam("callback");
+    alert(parseText);
+    var button = $('#BtnCtn').attr('href',  parseText);
 
 </script>
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
+</body>
 </html>
