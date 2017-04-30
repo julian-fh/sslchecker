@@ -1,4 +1,4 @@
-var pattern = "https://*.facebook.com/*";
+var pattern = "https://*.facebook.de/*";
 
 function redirect(requestDetails) {
   console.log("Redirecting: " + requestDetails.url);
@@ -25,17 +25,17 @@ function parseResult(jsonResponse, referenceURL) {
   for (; i < 3; i++) {
     if (getHostname(items[i].link) == getHostname(referenceURL)) {
       found = true;
-      console.log("found " + i);
-      console.log(getHostname(items[i].link));
-      console.log(getHostname(referenceURL));
+      console.log("found " + getHostname(referenceURL));
       break;
     }
   }
+
+  return found;
 }
 
 
 function main(target) {
-  var hostname = getHostname(target.url)
+  var hostname = getHostname(target.url);
   var res = hostname.split(".");
   var host = res[res.length - 2];
   console.log(host);
@@ -45,14 +45,26 @@ function main(target) {
 
   // <insert request here>
 
+  console.log("request init");
+
   xhr.send();
 
+  console.log("request done");
+
   var result = xhr.responseText;
-  parseResult(result, target.url);
+  if (parseResult(result, target.url)) {
+    console.log("success");
+    browser.browserAction.setPopup({popup: "/popup/success.html"});
+    browser.browserAction.setIcon({path: "icons/lock_32.png" });
+  } else {
+    console.log("error");
+    browser.browserAction.setPopup({popup: "/popup/fail.html"});
+    browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
+  }
 }
 
 
 browser.webRequest.onBeforeRequest.addListener(
   main,
-  {urls:[pattern]}
+  {urls:[pattern], types:["main_frame"]}
 );

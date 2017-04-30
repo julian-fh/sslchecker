@@ -8,12 +8,20 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://www.facebook.com",
+    "https://www.facebook.de",
     "https://www.google.de/*",
     "https://www.googleapis.com/*"
   ],
 
   "background": {
     "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "browser_style": true,
+    "default_popup": "popup/default.html",
+    "default_icon": {
+      "32": "icons/shield_32.png"
+    }
   }
 }
