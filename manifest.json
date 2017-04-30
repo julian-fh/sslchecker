@@ -8,9 +8,8 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://www.facebook.de",
-    "https://www.google.de/*",
-    "https://www.googleapis.com/*"
+    "activeTab",
+    "<all_urls>"
   ],
 
   "background": {

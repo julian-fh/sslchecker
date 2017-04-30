@@ -1,13 +1,3 @@
-var pattern = "https://*.facebook.de/*";
-
-function redirect(requestDetails) {
-  console.log("Redirecting: " + requestDetails.url);
-  return {
-    redirectUrl: "https://facebook.com"
-  };
-}
-
-
 function getHostname(target) {
   var l = document.createElement("a");
   l.href = target;
@@ -15,15 +5,29 @@ function getHostname(target) {
 }
 
 
+function areEqualHostnames(h1, h2){
+  res1 = getHostname(h1).split(".");
+  res2 = getHostname(h2).split(".");
+
+  if (res1[res1.length - 1] == res2[res2.length - 1] && res1[res1.length - 2] == res2[res2.length - 2]){
+    return true;
+  }
+
+  return false;
+}
+
+
 function parseResult(jsonResponse, referenceURL) {
+
+  console.log(jsonResponse);
+
   var response = JSON.parse(jsonResponse);
-  console.log(response);
   var items = response.items;
   var i = 0;
   var found = false;
 
   for (; i < 3; i++) {
-    if (getHostname(items[i].link) == getHostname(referenceURL)) {
+    if (areEqualHostnames(items[i].link, referenceURL)) {
       found = true;
       console.log("found " + getHostname(referenceURL));
       break;
@@ -36,16 +40,19 @@ function parseResult(jsonResponse, referenceURL) {
 
 function main(target) {
   var hostname = getHostname(target.url);
+
+  if (hostname == "julian-fh.github.io") {
+    return target;
+  }
+
   var res = hostname.split(".");
   var host = res[res.length - 2];
-  console.log(host);
+  console.log("Now processing:" + host);
 
   var xhr = new XMLHttpRequest();
   //xhr.open("GET", "https://www.google.de/?q=" + host, false);
 
   // <insert request here>
-
-  console.log("request init");
 
   xhr.send();
 
@@ -56,15 +63,22 @@ function main(target) {
     console.log("success");
     browser.browserAction.setPopup({popup: "/popup/success.html"});
     browser.browserAction.setIcon({path: "icons/lock_32.png" });
+
+    return target;
   } else {
-    console.log("error");
+    console.log("failed");
     browser.browserAction.setPopup({popup: "/popup/fail.html"});
     browser.browserAction.setIcon({path: "icons/unlocked_32.png"});
+
+    return {
+      redirectUrl: "https://julian-fh.github.io"
+    };
   }
 }
 
 
 browser.webRequest.onBeforeRequest.addListener(
   main,
-  {urls:[pattern], types:["main_frame"]}
+  {urls:["<all_urls>"], types:["main_frame"]},
+  ["blocking"]
 );
