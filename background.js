@@ -4,7 +4,20 @@ var tabStates = [];
 var currentTab = 0;
 var isActive = true;
 
-browser.tabs.onActivated.addListener(onTabSwitched)
+browser.tabs.onActivated.addListener(onTabSwitched);
+browser.browserAction.onClicked.addListener(handleIconClick);
+
+function handleIconClick() {
+  isActive = (!isActive);
+
+  if(isActive) {
+    browser.browserAction.setIcon({path: "icons/shield_32.png" });
+  }
+  else {
+    browser.browserAction.setIcon({path: "icons/deactivated_32.png" });
+    tabStates = [];
+  }
+}
 
 function setButtonState(state) {
   if (state) {
@@ -16,23 +29,27 @@ function setButtonState(state) {
   if (currentTab >= tabStates.length) {
     tabStates.push(state);
   } else {
-    tabStates[currentTa] = state;
+    tabStates[currentTab] = state;
   }
 }
 
 
 function onTabSwitched(tab) {
+  if (!isActive) {
+    return;
+  }
+
   var tabID = tab.tabId;
 
   if (tabID != null) {
-    try {
       currentTab = tabID;
       var tabState = tabStates[tabID];
 
-      setButtonState(tabState);
-    } catch (e) {
-
-    }
+      if (tabState == null) {
+        browser.browserAction.setIcon({path: "icons/shield_32.png" });
+      } else {
+        setButtonState(tabState);
+      }
   }
 }
 
@@ -78,6 +95,7 @@ function parseResult(jsonResponse, referenceURL) {
 
 function main(target) {
   if (!isActive) {
+    console.log("deactivated!!!");
     return target;
   }
 
@@ -85,6 +103,7 @@ function main(target) {
   var sourceHostname = getHostname(target.originUrl);
 
   if (hostname == "julian-fh.github.io" || sourceHostname == "julian-fh.github.io" || sourceHostname == hostname) {
+    console.log("early abort");
     return target;
   }
 
@@ -94,28 +113,29 @@ function main(target) {
   var host = res[res.length - 2];
   console.log("Now processing:" + host);
 
-        var xhr = new XMLHttpRequest();
-        //xhr.open("GET", "https://www.google.de/?q=" + host, false);
+  var xhr = new XMLHttpRequest();
+  //xhr.open("GET", "https://www.google.de/?q=" + host, false);
 
   // <insert request here>
+  var googleAPIkey = "";
+  xhr.open("GET", "https://www.googleapis.com/customsearch/v1?key=" + googleAPIkey + "&q=" + host + "&cx=010143307677666965821:bxxm3_rqvc4", false);
 
 
-        xhr.send();
 
-        console.log("request done");
+  xhr.send();
+
+  console.log("request done");
 
   var result = xhr.responseText;
 
   if (parseResult(result, target.url)) {
 
     console.log("success");
-    browser.browserAction.setPopup({popup: "/popup/locked_pop.html"});
     setButtonState(true);
 
     return target;
   } else {
     console.log("failed");
-    browser.browserAction.setPopup({popup: "/popup/unlocked_pop.html"});
     setButtonState(false);
 
     return {
@@ -123,15 +143,6 @@ function main(target) {
     };
   }
 }
-
-function handleIconClick() {
-
-  isActive=!isActive;
-    if(isActive){browser.BrowserAction.setIcon({path: "icons/lock_32.png" });}
-    else{browser.BrowserAction.setIcon({path: "icons/lock_32.png" })};
-}
-
-browser.browserAction.onClicked.addListener(handleIconCLick);
 
 
 browser.webRequest.onBeforeRequest.addListener(
